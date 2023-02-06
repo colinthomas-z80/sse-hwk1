@@ -17,7 +17,7 @@ def load_db():
     cur.execute("CREATE TABLE cve(id, severity)")
     cur.execute("CREATE TABLE packages(uuid, cve, manufacture, prodid, version, startversion, endversion, mode)")
 
-    for file in glob.glob("./nvdcve*"):
+    for file in glob.glob("./nvdcve-*"):
         f = open(file, "r")
         jcve_document = json.load(f)
         for i in jcve_document["CVE_Items"]:
@@ -89,6 +89,8 @@ def parse_xml(file):
                 cversion = result[4]
                 versionstring=""
                 if cversion != "*":
+                    if not version:
+                        continue
                     if packaging.version.parse(cversion) <= packaging.version.parse(version):
                         continue
                 else:
